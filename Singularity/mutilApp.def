@@ -1,0 +1,57 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%environment
+    Version="V1.0.0"
+
+# defined app1
+
+%files
+    app1 /opt/app1
+    app2 /opt/app2
+
+%apprun app1
+    exec cat /opt/app1
+
+%appinstall app1
+    cd /opt
+    echo "hello app1" >> app1
+
+%appenv app1
+    APPV="1"
+    export APPV
+
+%applabels app1
+    Name App1
+
+%apphelp app1
+    this is app1, please run this command:
+    singularity run --app app1 xxx.sif
+
+
+
+# defined app2
+%apprun app2
+    exec cat /opt/app2
+
+%appinstall app2
+    cd /opt
+    echo "hello app2" >> app2
+
+%appenv app2
+    APPV="2"
+    export APPV
+
+%applabels app2
+    Name App2
+
+%apphelp app2
+    this is app2, please run this command:
+    singularity run --app app2 xxx.sif
+
+# singularity run --app app1 xxx.sif
+# singularity exec --app app1 xxx.sif env | grep APPV
+# SCIF 应用程序
+# SCIF 是将多个应用程序封装到一个容器中的标准。带有 SCIF 应用程序的容器有多个入口点，
+# 您可以轻松选择要运行的入口点。每个入口点都可以使用自己的环境、元数据等执行不同的任务，而无需收集不同的容器。
+

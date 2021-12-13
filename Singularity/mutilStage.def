@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: golang:1.12.3-alpine3.9
+Stage: builder
+%post
+    # prep environment
+    export PATH="/go/bin:/usr/local/go/bin:$PATH"
+    export HOME="/root"
+    cd /root
+
+    # insert source code, could also be copied from the host with %files
+    cat << EOF > hello.go
+package main
+import "fmt"
+func main() {
+        fmt.Printf("Hello World!\n")
+    }
+EOF
+      go build -o hello hello.go
+
+Bootstrap: library
+From: alpine:3.9
+Stage: devops
+%files from builder
+    /root/hello /opt/hello
+
+%runscript
+    exec /opt/hello "$@"
+
+%labels
+   author austsxk
+
+%help
+    run this images is:
+    ./xxxx.sif
+    or
+    singularity run xxx.sif
+
+
+# build command
+# singularity build hello.sif mutilStage.def
